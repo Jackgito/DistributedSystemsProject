@@ -2,24 +2,13 @@ import bcrypt # pip3 install bcrypt (used for password hashing)
 import pymongo # pip3 install pymongo (MongoDB is database of choice)
 from xmlrpc.server import SimpleXMLRPCServer
 
-dbClient = pymongo.MongoClient("mongodb://localhost:27017/DSproject")  # DSproject is database name
-db = dbClient["DSproject"]
-collection = db["users"] # users is cluster name (cluster is like a table)
-
-# Create a server instance
-server = SimpleXMLRPCServer(("localhost", 3000))
-
-# Start listening for requests
-print("Server listening on port 3000")
-server.serve_forever()
-
+DBCLIENT = pymongo.MongoClient("mongodb://localhost:27017")
+DB = DBCLIENT["DSproject"]
+COLLECTION = DB["users"] # users is cluster name (cluster is like a table)
 
 # Used for sign up
 def is_username_unique(username):
-  if collection.find_one({"username": username}):
-    return True
-  else:
-    return False
+  return COLLECTION.find_one({"username": username})
 
 def create_user(username, password):
   # Hash the password using bcrypt
@@ -28,7 +17,7 @@ def create_user(username, password):
   # Save username and hashed password to the database
   try:
     data = {"username": username, "password": hashed_password.decode('utf-8')}
-    collection.insert_one(data)
+    COLLECTION.insert_one(data)
   except:
     return False
   
@@ -36,7 +25,7 @@ def create_user(username, password):
 
 def login(username, password):
     # Find user by username
-    user = collection.find_one({"username": username})
+    user = COLLECTION.find_one({"username": username})
 
     # Check if username exists
     if user is None:
@@ -53,8 +42,16 @@ def login(username, password):
     print(f"Welcome back, {username}!")
     return True
 
-def test():
-   print("Test")
-   return
+if __name__ == "__main__":
+    with SimpleXMLRPCServer(('localhost', 3000), allow_none=True) as server:
+        server.register_introspection_functions()
 
-server.register_function(test, "test")
+        server.register_function(is_username_unique)
+
+        print("Control-c to quit")
+
+        try:
+            server.serve_forever()
+        except KeyboardInterrupt:
+            exit(0)
+
