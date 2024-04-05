@@ -1,10 +1,10 @@
-from helper_functions import clear_screen
-from authentication import show_authentication_menu, check_password
 import xmlrpc.client # For communication with server
-import show_posts
-import create_post
-import search_tweets_by_hashtag
-import send_dm
+from helper_functions import clear_screen
+from authentication import show_authentication_menu
+from show_posts import show_posts
+from create_post import create_post
+from search_tweets_by_hashtag import search_tweets_by_hashtag
+from send_dm import send_dm
 
 # Connect to the server
 SERVER_URL = "http://localhost:3000"
