@@ -1,33 +1,37 @@
-import re
+import re # Regular expression for password validation
+from helper_functions import clear_screen
 
 def handle_signup(client) -> bool:
-    username = input("Username: ")
+    
+    while True:
+      username = input("Username: ")
 
-    if username is None:
-      print("Please enter your username")
-      return False
+      if not username:
+        print("Please enter your username")
+        continue
 
-    # Check if username exists already
-    if client.is_username_unique(username) == False:
-      print("Username already exists")
-      return False
+      # Check if username exists already
+      if client.is_username_unique(username) == False:
+        print("Username already exists")
+        continue
 
-    # Check if password meets requirements
-    print("Password must contain at least:\n  one lowercase letter")
-    print("  one uppercase letter\n  one number\n  one special character.")
-    password = input("Password: ")
+      # Check if password meets requirements
+      print("Password must contain at least:\n  one lowercase letter")
+      print("  one uppercase letter\n  one number\n  one special character.")
+      password = input("Password: ")
 
-    # Check if password is valid and 
-    if not check_password(password):
-        return False
+      # Check if password is valid and 
+      if not check_password(password):
+          print("Invalid password")
+          continue
 
-    # Send the credentials to the server
-    if not client.create_user(username, password):
-        print("Sign up failed")
-        return False
+      # Send the credentials to the server
+      if not client.create_user(username, password):
+          print("Sign up failed")
+          return False
 
-    print("Sign up successful")
-    return True
+      print("Sign up successful")
+      return True
         
 def get_username_list():
    username_list = ["Juhani"]
@@ -37,31 +41,39 @@ def handle_login(client):
     username = input("Username: ")
     password = input("Password: ")
 
-    return
+    if client.login(username, password):
+       clear_screen()
+       print("Login successful")
+       return True
+
+    print("Login failed")
+    return False
 
 
 def show_authentication_menu(client):
-    print("""
-    Welcome to "Twitter"
-
-    1. Sign Up
-    2. Login
-
-    0. Exit
-    """)
-
-    choice = input("Enter your choice: ")
-
-    if choice == '1':
-      handle_signup(client)
-    elif choice == '2':
-      handle_login(client)
-    elif choice == '0':
-      quit()
-    else:
-      print("Invalid choice. Please try again.")
     
-    return
+    while True:
+      print("""
+      Welcome to "Twitter"
+
+      1. Sign Up
+      2. Login
+
+      0. Exit
+      """)
+
+      choice = input("Enter your choice: ")
+
+      if choice == '1':
+        if handle_signup(client):
+          return True
+      elif choice == '2':
+        if handle_login(client):
+           return True
+      elif choice == '0':
+        quit()
+      else:
+        print("Invalid choice. Please try again.")
 
 
 def check_password(password):

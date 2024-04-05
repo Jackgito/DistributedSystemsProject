@@ -8,7 +8,9 @@ COLLECTION = DB["users"] # users is cluster name (cluster is like a table)
 
 # Used for sign up
 def is_username_unique(username):
-  return COLLECTION.find_one({"username": username})
+  if COLLECTION.find_one({"username": username}):
+     return False
+  return True
 
 def create_user(username, password):
   # Hash the password using bcrypt
@@ -48,6 +50,7 @@ if __name__ == "__main__":
 
         server.register_function(is_username_unique)
         server.register_function(create_user)
+        server.register_function(login)
 
         print("Control-c to quit")
 
