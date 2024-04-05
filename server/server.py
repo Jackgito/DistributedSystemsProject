@@ -47,6 +47,7 @@ if __name__ == "__main__":
         server.register_introspection_functions()
 
         server.register_function(is_username_unique)
+        server.register_function(create_user)
 
         print("Control-c to quit")
 
