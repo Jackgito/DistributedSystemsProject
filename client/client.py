@@ -1,9 +1,14 @@
 from helper_functions import clear_screen
 from authentication import show_authentication_menu
+import xmlrpc.client # For communication with server
 import show_posts
 import create_post
 import search_tweets_by_hashtag
 import send_dm
+
+# Connect to the server
+server_url = "http://localhost:3000"
+client = xmlrpc.client.ServerProxy(server_url)
 
 def show_main_menu():
     while True:
@@ -47,7 +52,7 @@ def show_main_menu():
 def main():
 
   while True:
-      show_authentication_menu()
+      show_authentication_menu(client)
       show_main_menu()
 
 if __name__ == "__main__":
