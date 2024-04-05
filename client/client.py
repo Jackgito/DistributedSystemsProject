@@ -1,5 +1,5 @@
 from helper_functions import clear_screen
-from authentication import show_authentication_menu
+from authentication import show_authentication_menu, check_password
 import xmlrpc.client # For communication with server
 import show_posts
 import create_post

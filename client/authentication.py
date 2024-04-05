@@ -81,12 +81,21 @@ def check_password(password):
   # Character type checks using regular expressions
   has_lower = bool(re.search(r"[a-z]", password))
   has_upper = bool(re.search(r"[A-Z]", password))
-  has_digit = bool(re.search(r"\d", password))
-  has_special = bool(re.search(r"[!@#$%^&*()_+-=[]{};':|\,.<>/?]", password))
+  has_digit = bool(re.search(r"[0-9]", password))
+  #has_special = bool(re.search(r"[!@#$%^&*()_+-={}[\];':|\,.<>/?]", password))
+
+  has_special = False
+  special = "!@#$€£§%^&*()_+-={}[];\"':|\\,.<>/?"
+
+  for c in password:
+      if c in special:
+          has_special = True
+          break
 
   # Check for all character types
-  if not (has_lower and has_upper and has_digit and has_special):
-    return False
+  valid = has_lower and has_upper and has_digit and has_special
 
-  # Password is valid
-  return True
+  if not valid:
+      print("Password does not match requirements")
+
+  return valid
