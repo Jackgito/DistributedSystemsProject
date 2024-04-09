@@ -3,8 +3,11 @@ import pymongo # pip3 install pymongo (MongoDB is database of choice)
 from xmlrpc.server import SimpleXMLRPCServer
 
 DBCLIENT = pymongo.MongoClient("mongodb://localhost:27017")
+DBCLIENT.server_info()
+print("Connection to MongoDB established successfully!")
 DB = DBCLIENT["DSproject"]
 COLLECTION = DB["users"] # users is cluster name (cluster is like a table)
+POSTS = DB["Posts"]
 
 # Used for sign up
 def is_username_unique(username):
@@ -42,12 +45,26 @@ def login(username, password):
     print(f"Welcome back, {username}!")
     return True
 
+#fetching 10 newest post
+def fetchPosts():
+  #  data = {"Title": "Title for post", "Poster": "username", "text":"Text for the post", "Timestamp":"datetime timestamp", "hashtags":["#hastag1", "#hastag2"], "Likes": 10, "Comments":["commenttext1"]}
+  #  POSTS.insert_one(data)
+  posts =POSTS.find()
+  all_posts=[]
+  for post in posts:
+    all_posts.append(post)
+  for i in all_posts:
+     i['_id'] = str(i['_id']) # id and datetime needs to be converted to strings.
+     i['Timestamp'] = str(i['Timestamp'])
+  return all_posts
+
 if __name__ == "__main__":
     with SimpleXMLRPCServer(('localhost', 3000), allow_none=True) as server:
         server.register_introspection_functions()
 
         server.register_function(is_username_unique)
         server.register_function(create_user)
+        server.register_function(fetchPosts)
 
         print("Control-c to quit")
 
