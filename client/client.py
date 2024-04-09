@@ -25,8 +25,8 @@ def show_main_menu():
       choice = input("Enter your choice: ")
 
       if choice == '1':
-        clear_screen()
-        show_posts()
+        #clear_screen()
+        show_posts.show_posts(CLIENT)
 
       elif choice == '2':
         clear_screen()
