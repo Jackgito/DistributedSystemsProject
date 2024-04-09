@@ -1,7 +1,7 @@
 import bcrypt # pip3 install bcrypt (used for password hashing)
 import pymongo # pip3 install pymongo (MongoDB is database of choice)
 from xmlrpc.server import SimpleXMLRPCServer
-
+from datetime import datetime
 DBCLIENT = pymongo.MongoClient("mongodb://localhost:27017")
 DBCLIENT.server_info()
 print("Connection to MongoDB established successfully!")
@@ -47,9 +47,9 @@ def login(username, password):
 
 #fetching 10 newest post
 def fetchPosts():
-  #  data = {"Title": "Title for post", "Poster": "username", "text":"Text for the post", "Timestamp":"datetime timestamp", "hashtags":["#hastag1", "#hastag2"], "Likes": 10, "Comments":["commenttext1"]}
-  #  POSTS.insert_one(data)
-  posts =POSTS.find()
+  # data = {"Title": "Title for post", "Poster": "username", "text":"Text for the post", "Timestamp":datetime.now(), "hashtags":["#hastag1", "#hastag2"], "Likes": 10, "Comments":["commenttext1"]}
+  # POSTS.insert_one(data)
+  posts =POSTS.find().sort([('Timestamp', -1)]).limit(10)
   all_posts=[]
   for post in posts:
     all_posts.append(post)

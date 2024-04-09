@@ -25,7 +25,7 @@ def show_main_menu():
       choice = input("Enter your choice: ")
 
       if choice == '1':
-        clear_screen()
+        #clear_screen()
         show_posts.show_posts(CLIENT)
 
       elif choice == '2':
@@ -50,7 +50,7 @@ def show_main_menu():
 def main():
 
   while True:
-      #show_authentication_menu(CLIENT)
+      show_authentication_menu(CLIENT)
       show_main_menu()
 
 if __name__ == "__main__":
