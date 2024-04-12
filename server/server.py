@@ -9,9 +9,10 @@ DB = DBCLIENT["DSproject"]
 COLLECTION = DB["users"] # users is cluster name (cluster is like a table)
 POSTS = DB["Posts"]
 
-# Used for sign up
+# Used for sign up. Returns true if username exits, false otherwise
 def is_username_unique(username):
-  return COLLECTION.find_one({"username": username})
+  user_count = COLLECTION.count_documents({"username": username})
+  return user_count == 0
 
 def create_user(username, password):
   # Hash the password using bcrypt

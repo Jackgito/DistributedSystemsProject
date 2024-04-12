@@ -4,8 +4,8 @@ import globals
 def handle_signup(client) -> bool:
     username = input("Username: ")
 
-    if username is None:
-      print("Please enter your username")
+    if len(username) == 0:
+      print("Username is required")
       return False
 
     # Check if username exists already
@@ -18,7 +18,7 @@ def handle_signup(client) -> bool:
     print("  one uppercase letter\n  one number\n  one special character.")
     password = input("Password: ")
 
-    # Check if password is valid and 
+    # Check if password is valid
     if not check_password(password):
         return False
 
@@ -41,34 +41,36 @@ def handle_login(client):
     
     if(not client.login(username, password)):
        print("Invalid credentials")
+       return False
       
     globals.current_user = username
     print("Login successful")
-    return
+    return True
 
 
 def show_authentication_menu(client):
-    print("""
-    Welcome to "Twitter"
+    while True:
+      print("""
+      Welcome to "Twitter"
 
-    1. Sign Up
-    2. Login
+      1. Sign Up
+      2. Login
 
-    0. Exit
-    """)
+      0. Exit
+      """)
 
-    choice = input("Enter your choice: ")
+      choice = input("Enter your choice: ")
 
-    if choice == '1':
-      handle_signup(client)
-    elif choice == '2':
-      handle_login(client)
-    elif choice == '0':
-      quit()
-    else:
-      print("Invalid choice. Please try again.")
-    
-    return
+      if choice == '1':
+        if handle_signup(client):
+          return
+      elif choice == '2':
+        if handle_login(client):
+          return
+      elif choice == '0':
+        quit()
+      else:
+        print("Invalid choice. Please try again.")
 
 
 def check_password(password):
