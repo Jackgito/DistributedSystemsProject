@@ -1,4 +1,5 @@
 import re
+import globals 
 
 def handle_signup(client) -> bool:
     username = input("Username: ")
@@ -26,6 +27,7 @@ def handle_signup(client) -> bool:
         print("Sign up failed")
         return False
 
+    globals.current_user = username
     print("Sign up successful")
     return True
         
@@ -36,7 +38,12 @@ def get_username_list():
 def handle_login(client):
     username = input("Username: ")
     password = input("Password: ")
-
+    
+    if(not client.login(username, password)):
+       print("Invalid credentials")
+      
+    globals.current_user = username
+    print("Login successful")
     return
 
 

@@ -5,6 +5,7 @@ import show_posts
 import create_post
 import search_tweets_by_hashtag
 import send_dm
+import globals
 
 # Connect to the server
 SERVER_URL = "http://localhost:3000"
@@ -29,8 +30,8 @@ def show_main_menu():
         show_posts.show_posts(CLIENT)
 
       elif choice == '2':
-        clear_screen()
-        create_post()
+        #clear_screen()
+        create_post.create_post(CLIENT)
         
       elif choice == '3':
         clear_screen()
@@ -42,6 +43,7 @@ def show_main_menu():
 
       elif choice == '5':
         clear_screen()
+        globals.current_user = None
         # sign_out()
         return
       else:

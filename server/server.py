@@ -37,6 +37,7 @@ def login(username, password):
 
     # Verify password using bcrypt
     hashed_password = user["password"].encode('utf-8')  # Convert stored password to bytes
+
     if not bcrypt.checkpw(password.encode('utf-8'), hashed_password):
         print("Invalid username or password")
         return False
@@ -44,6 +45,23 @@ def login(username, password):
     # Login successful
     print(f"Welcome back, {username}!")
     return True
+
+def createPost(poster, title, postText, timestamp, hashtags):
+  '''
+  Creates new post and adds it to database. Parameters:
+  - poster (str): the user who created the post
+  - title (str): title of the post
+  - postText (str): post content
+  - timestamp (datetime): time when post was created
+  - hashtags (list): list of hashtags associated with the post
+  '''
+  try:
+    data = {"Title": title, "Poster": poster, "text": postText, "Timestamp": timestamp, "hashtags": hashtags, "Likes": 0, "Comments": []}
+    POSTS.insert_one(data)
+  except:
+    return False
+  
+  return True
 
 #fetching 10 newest post
 def fetchPosts():
@@ -65,6 +83,8 @@ if __name__ == "__main__":
         server.register_function(is_username_unique)
         server.register_function(create_user)
         server.register_function(fetchPosts)
+        server.register_function(login)
+        server.register_function(createPost)
 
         print("Control-c to quit")
 
