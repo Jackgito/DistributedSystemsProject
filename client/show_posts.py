@@ -1,13 +1,13 @@
 
 def printPost(post):
-    
+    hashtags_formatted = ' '.join(f'#{tag}' for tag in post['hashtags'])
     print(
         f''' 
        |{post['Poster']}: {post['Title']}|
 
         {post['text']}
 
-        Likes: {post['Likes']} | Hashtags # {post['hashtags']}
+        Likes: {post['Likes']} | Hashtags {hashtags_formatted}
         ----------------------------
         Comments:
         {post['Comments']}
