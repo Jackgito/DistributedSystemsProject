@@ -1,7 +1,7 @@
 from datetime import datetime
 import globals
 
-def create_post(client):
+def create_post(CLIENT):
   poster = globals.current_user
   title = ""
   post = ""
@@ -25,7 +25,7 @@ def create_post(client):
   if (input("Add hashtags for your Tweet? (y/n) ") == "y"):
     hashtags = input("Enter hashtags (separate with space): ").split(" ")
 
-  if (client.createPost(poster, title, post, timestamp, hashtags)):
+  if (CLIENT.create_post(poster, title, post, timestamp, hashtags)):
     print("Post created")
   else: 
     print("Post could not be created")

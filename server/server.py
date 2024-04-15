@@ -47,7 +47,7 @@ def login(username, password):
     print(f"Welcome back, {username}!")
     return True
 
-def createPost(poster, title, postText, timestamp, hashtags):
+def create_post(poster, title, postText, timestamp, hashtags):
   '''
   Creates new post and adds it to database. Parameters:
   - poster (str): the user who created the post
@@ -64,8 +64,8 @@ def createPost(poster, title, postText, timestamp, hashtags):
   
   return True
 
-#fetching 10 newest post
-def fetchPosts():
+# Fetch 10 newest posts
+def fetch_posts():
   # data = {"Title": "Title for post", "Poster": "username", "text":"Text for the post", "Timestamp":datetime.now(), "hashtags":["#hastag1", "#hastag2"], "Likes": 10, "Comments":["commenttext1"]}
   # POSTS.insert_one(data)
   posts =POSTS.find().sort([('Timestamp', -1)]).limit(10)
@@ -77,15 +77,43 @@ def fetchPosts():
      i['Timestamp'] = str(i['Timestamp'])
   return all_posts
 
+def like_post(post_name, username):
+  try:
+
+    # Check if post exists
+    if not POSTS.find_one({"Title": post_name}):
+      return "PostNotFound"
+    
+    # Check if user has liked already. 
+    # If they have, remove the like and user from the liked list
+    if POSTS.find_one({"Title": post_name, "LikedUsers": {"$in": [username]}}):
+      POSTS.find_one_and_update(
+          {"Title": post_name, "LikedUsers": {"$in": [username]}},
+          {"$pull": {"LikedUsers": username}, "$inc": {"Likes": -1}},
+      )
+      return "LikeRemoved"
+    else:
+      # User hasn't liked, so add like and user
+      POSTS.find_one_and_update(
+          {"Title": post_name},
+          {"$inc": {"Likes": 1}, "$addToSet": {"LikedUsers": username}},
+      )
+      return "LikeAdded"
+
+  except:
+    return "Error"
+
+
 if __name__ == "__main__":
     with SimpleXMLRPCServer(('localhost', 3000), allow_none=True) as server:
         server.register_introspection_functions()
 
         server.register_function(is_username_unique)
         server.register_function(create_user)
-        server.register_function(fetchPosts)
+        server.register_function(fetch_posts)
         server.register_function(login)
-        server.register_function(createPost)
+        server.register_function(create_post)
+        server.register_function(like_post)
 
         print("Control-c to quit")
 
