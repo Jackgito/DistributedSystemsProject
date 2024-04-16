@@ -47,6 +47,12 @@ def login(username, password):
     print(f"Welcome back, {username}!")
     return True
 
+def is_title_unique(title):
+   if (POSTS.find_one({"Title": title})):
+       return False
+   
+   return True
+
 def create_post(poster, title, postText, timestamp, hashtags):
   '''
   Creates new post and adds it to database. Parameters:
@@ -114,6 +120,7 @@ if __name__ == "__main__":
         server.register_function(login)
         server.register_function(create_post)
         server.register_function(like_post)
+        server.register_function(is_title_unique)
 
         print("Control-c to quit")
 

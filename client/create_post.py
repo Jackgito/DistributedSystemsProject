@@ -13,6 +13,9 @@ def create_post(CLIENT):
     title = input("Give a title for your Tweet: ")
     if not title: 
       print("Please enter a title for your Tweet")
+    elif not CLIENT.is_title_unique(title):
+      print("Post with same title already exists.")
+      title = ""
 
   while not post:
     post = input("What do you want to 'Tweet' about? (Max 200 characters): ") 
