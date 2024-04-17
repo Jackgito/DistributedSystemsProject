@@ -35,7 +35,7 @@ def show_main_menu():
         
       elif choice == '3':
         clear_screen()
-        search_tweets_by_hashtag()
+        search_tweets_by_hashtag.search_tweets_by_hashtag(CLIENT)
 
       elif choice == '4':
         clear_screen()

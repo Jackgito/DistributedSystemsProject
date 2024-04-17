@@ -14,6 +14,15 @@ def is_username_unique(username):
   user_count = COLLECTION.count_documents({"username": username})
   return user_count == 0
 
+def go_through_posts( cursor):
+  result_array=[]
+  for post in cursor:
+    result_array.append(post)
+  for i in result_array:
+     i['_id'] = str(i['_id']) # id and datetime needs to be converted to strings.
+     i['Timestamp'] = str(i['Timestamp'])
+  return result_array
+
 def create_user(username, password):
   # Hash the password using bcrypt
   hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
@@ -75,13 +84,13 @@ def fetch_posts():
   # data = {"Title": "Title for post", "Poster": "username", "text":"Text for the post", "Timestamp":datetime.now(), "hashtags":["#hastag1", "#hastag2"], "Likes": 10, "Comments":["commenttext1"]}
   # POSTS.insert_one(data)
   posts =POSTS.find().sort([('Timestamp', -1)]).limit(10)
-  all_posts=[]
-  for post in posts:
-    all_posts.append(post)
-  for i in all_posts:
-     i['_id'] = str(i['_id']) # id and datetime needs to be converted to strings.
-     i['Timestamp'] = str(i['Timestamp'])
-  return all_posts
+  
+  
+  return go_through_posts(posts)
+
+def find_hashtag(hashtag):
+  posts = POSTS.find({"hashtags" : {"$in" : [hashtag]}})
+  return go_through_posts(posts)
 
 def like_post(post_name, username):
   try:
@@ -121,6 +130,7 @@ if __name__ == "__main__":
         server.register_function(create_post)
         server.register_function(like_post)
         server.register_function(is_title_unique)
+        server.register_function(find_hashtag)
 
         print("Control-c to quit")
 
