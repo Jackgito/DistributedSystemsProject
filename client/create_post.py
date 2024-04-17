@@ -7,7 +7,7 @@ def create_post(CLIENT):
   post = ""
   hashtags = []
   timestamp = datetime.now()
-  timestamp = timestamp.strftime("%m.%d.%Y")
+  timestamp = timestamp.strftime("%m.%d.%Y %H:%M")
 
   while not title:
     title = input("Give a title for your Tweet: ")
