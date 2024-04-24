@@ -1,4 +1,4 @@
-from datetime import datetime
+
 import globals
 
 def create_post(CLIENT):
@@ -6,9 +6,7 @@ def create_post(CLIENT):
   title = ""
   post = ""
   hashtags = []
-  timestamp = datetime.now()
-  timestamp = timestamp.strftime("%m.%d.%Y %H:%M")
-
+  
   while not title:
     title = input("Give a title for your Tweet: ")
     if not title: 
@@ -26,9 +24,9 @@ def create_post(CLIENT):
       post = ""
 
   if (input("Add hashtags for your Tweet? (y/n) ") == "y"):
-    hashtags = input("Enter hashtags (separate with space): ").split(" ")
+    hashtags = input("Enter hashtags (separate with space and without #): ").split(" ")
 
-  if (CLIENT.create_post(poster, title, post, timestamp, hashtags)):
+  if (CLIENT.create_post(poster, title, post, hashtags)):
     print("Post created")
   else: 
     print("Post could not be created")

@@ -1,6 +1,6 @@
 import requests # pip3 install requests 
 from xmlrpc.server import SimpleXMLRPCServer
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 # Used for sign up. Returns true if username exits, false otherwise
@@ -22,8 +22,11 @@ def go_through_posts(cursor):
   for post in cursor:
     result_array.append(post)
   for i in result_array:
-     i['_id'] = str(i['_id']) # id and datetime needs to be converted to strings.
-     i['Timestamp'] = str(i['Timestamp'])
+    i['_id'] = str(i['_id']) # id and datetime needs to be converted to strings.
+    i['Timestamp'] = str(i['Timestamp'])
+    iso_date = datetime.fromisoformat(i['Timestamp'])+ timedelta(hours=3) # Formatting the date to wanted form +3 hours to match Helsinki timezone
+    formatted_date = iso_date.strftime("%d/%m/%Y %H:%M")
+    i['Timestamp'] = formatted_date 
   return result_array
 
 def create_user(username, password): 
@@ -69,21 +72,19 @@ def is_title_unique(title):
 
   return data['isUnique']
 
-def create_post(poster, title, postText, timestamp, hashtags): 
-  '''
-  Creates new post and adds it to database. Parameters:
-  - poster (str): the user who created the post
-  - title (str): title of the post
-  - postText (str): post content
-  - timestamp (datetime): time when post was created
-  - hashtags (list): list of hashtags associated with the post
-  '''
+def create_post(poster, title, postText, hashtags): 
+  
+  # Creates new post and adds it to database. Parameters:
+  # - poster (str): the user who created the post
+  # - title (str): title of the post
+  # - postText (str): post content
+  # - timestamp (datetime): time when post was created
+  # - hashtags (list): list of hashtags associated with the post
+  
   url = 'http://localhost:5000/create_post' 
-  data = {"title": title, "poster": poster, "text": postText, "timestamp": timestamp, "hashtags": hashtags}
+  data = {"title": title, "poster": poster, "text": postText, "hashtags": hashtags}
   
   response = requests.post(url, json=data) 
-  print(response.status_code)
-  
   if (response.status_code == 201):
     return True
   else:
