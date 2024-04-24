@@ -25,8 +25,9 @@ This project implements a simplified Twitter clone application built with Python
 **Running the Application:**
 
 **prerequisite:**
-   Node version 18 or newer
-   Python 3.11 or newer
+
+   * Node version 18 or newer
+   * Python 3.11 or newer
    
 1. **Node.js Server:**
     * Navigate to the node-server directory.
