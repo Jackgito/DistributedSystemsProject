@@ -78,11 +78,13 @@ app.post('/login', async (req, res) => {
 // route for creating a post
 app.post('/create_post', async (req, res) => {
   try {
+    
+
     const post = new POST({
       Title: req.body.title,
       Poster: req.body.poster,
       Text: req.body.text,
-      Timestamp: req.body.timestamp, 
+      Timestamp: new Date(), 
       Hashtags: req.body.hashtags, 
       Likes: 0, 
       Comments: []
@@ -92,6 +94,7 @@ app.post('/create_post', async (req, res) => {
 
     res.status(201).send({ message: "Post created successfully" }) 
   } catch (error) {
+      console.log(error)
       res.status(500).send({ message: "Server error", error: error.toString() }) 
   }
 }) 

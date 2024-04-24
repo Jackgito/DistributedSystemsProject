@@ -6,7 +6,7 @@ def clear_screen():
 def print_posts(array_of_posts):
   for post in array_of_posts:
     hashtags_formatted = ' '.join(f'#{tag}' for tag in post['Hashtags'])
-    comments_formatted = '\n'.join(f" {comment['Username']}: {comment['Text']}" for comment in post['Comments'])
+    comments_formatted = '\n        '.join(f" {comment['Username']}: {comment['Text']}" for comment in post['Comments'])
 
     print(
         f''' 

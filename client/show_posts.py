@@ -25,5 +25,13 @@ def show_OWN_posts(CLIENT):
   else: 
     print_posts(arrayOfPosts)
 
-  # going back to the main menu
-  return 0
+      
+    # Like / comment on the posts
+    if (len(arrayOfPosts)==0):
+       print("No posts to show!")
+       return
+    while True:
+      if (post_menu.post_menu(CLIENT) == False):
+         break
+      
+
