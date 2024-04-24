@@ -1,6 +1,6 @@
-**Twitter Clone in Python**
+**Twitter Clone**
 
-This project implements a simplified Twitter clone application built with Python. It utilizes MongoDB as the database and XML-RPC for communication between the server and client.
+This project implements a simplified Twitter clone application built with Python and Node.js. It utilizes MongoDB as the database, XML-RPC for communication between the Python server and client and RESTful API in the Node.js server.
 
 **Features:**
 
@@ -18,21 +18,26 @@ This project implements a simplified Twitter clone application built with Python
 
 **Technology Stack:**
 
-* Programming Language: Python
+* Programming Languages: Python, JavaScript
 * Database: MongoDB
-* Communication Protocol: XML-RPC
+* Communication Protocol: XML-RPC, RESTful API (via Node.js)
 
 **Running the Application:**
 
-1. **Server:**
+1. **Node.js Server:**
+    * Navigate to the node-server directory.
+    * Run `npm install` to install dependencies.
+    * Start the server with node server.js to handle database operations.
+2. **Python Server**
     * Ensure you have MongoDB running locally (port 27017 by default).
-    * Open a terminal in the project directory and run: `npm install` and `python server.py`
-2. **Client:**
+    * Open a terminal in the project directory and run: `python server.py`
+3. **Client:**
     * Open a separate terminal in the project directory and run: `python client.py`
 
 **Code Structure:**
 
-The codebase is divided into two main parts:
+The codebase is divided into three main parts:
 
-* **server.py:** This file handles the server-side logic, including user management, post creation/storage, and interaction functionalities. It utilizes libraries like `pymongo` and `xmlrpc.server` for database interaction and remote procedure calls (RPC).
+* **node-server/server.js:** Handles the interactions with MongoDB through RETSTful API, including user management, post creation, and post fetching. This server utilizes Express.js and Mongoose to manage routes and data schema. 
+* **server.py:** Handles communication between the Python client and the Node.js server. Processes client requests, communicates with the Node:js server via HTTP requests and handles XML-RPC responses to the client.
 * **client.py:** This file implements the client-side interface. It uses the `xmlrpc.client` library to communicate with the server and displays menus for various user actions like viewing posts, creating posts, searching, and signing out. Additionally, separate modules handle functionalities like authentication, post creation, and search.
