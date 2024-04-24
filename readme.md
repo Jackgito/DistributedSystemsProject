@@ -24,15 +24,20 @@ This project implements a simplified Twitter clone application built with Python
 
 **Running the Application:**
 
+**prerequisite:**
+   Node version 18 or newer
+   Python 3.11 or newer
+   
 1. **Node.js Server:**
     * Navigate to the node-server directory.
     * Run `npm install` to install dependencies.
     * Start the server with `node server.js` to handle database operations.
 2. **Python Server**
     * Ensure you have MongoDB running locally (port 27017 by default).
-    * Open a terminal in the project directory and run: `python server.py`
+    * run command `pip install requests`
+    * Open a terminal in the server directory and run: `python server.py`
 3. **Client:**
-    * Open a separate terminal in the project directory and run: `python client.py`
+    * Open a separate terminal in the client directory and run: `python client.py`
 
 **Code Structure:**
 
