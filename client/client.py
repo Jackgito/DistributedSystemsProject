@@ -1,10 +1,9 @@
 from helper_functions import clear_screen
-from authentication import show_authentication_menu, check_password
+from authentication import show_authentication_menu
 import xmlrpc.client # For communication with server
 import show_posts
 import create_post
 import search_tweets_by_hashtag
-import send_dm
 import globals
 
 # Connect to the server
@@ -17,10 +16,9 @@ def show_main_menu():
       What do you want to do?
 
       1. Show 10 latest posts
-      2. Create a post 
-      3. Search “Tweets” by hashtag
-      4. Send direct message
-      5. Sign out 
+      2. Create a post
+      3. Search posts by hashtag
+      4. Sign out
       """)
 
       choice = input("Enter your choice: ")
@@ -39,13 +37,10 @@ def show_main_menu():
 
       elif choice == '4':
         clear_screen()
-        send_dm()
-
-      elif choice == '5':
-        clear_screen()
         globals.current_user = None
         # sign_out()
         return
+      
       else:
         print("Invalid choice. Please try again.")
 

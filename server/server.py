@@ -92,7 +92,7 @@ def find_hashtag(hashtag):
   posts = POSTS.find({"hashtags" : {"$in" : [hashtag]}})
   return go_through_posts(posts)
 
-def like_post(post_name, username):
+def like_post(post_name, username, comment):
   try:
 
     # Check if post exists
@@ -118,6 +118,22 @@ def like_post(post_name, username):
   except:
     return "Error"
 
+def comment_post(post_name, username, comment):
+  try:
+    # Check if post exists
+    if not POSTS.find_one({"Title": post_name}):
+      return "PostNotFound"
+
+    # Update the post with the new comment
+    POSTS.find_one_and_update(
+        {"Title": post_name},
+        {"$push": {"Comments": {"Username": username, "Text": comment}}},
+    )
+    return "CommentAdded"
+
+  except:
+    return "Error"
+
 
 if __name__ == "__main__":
     with SimpleXMLRPCServer(('localhost', 3000), allow_none=True) as server:
@@ -131,6 +147,7 @@ if __name__ == "__main__":
         server.register_function(like_post)
         server.register_function(is_title_unique)
         server.register_function(find_hashtag)
+        server.register_function(comment_post)
 
         print("Control-c to quit")
 
