@@ -1,11 +1,20 @@
-import requests # pip3 install requests 
 from xmlrpc.server import SimpleXMLRPCServer
 from datetime import datetime, timedelta
+from socketserver import ThreadingMixIn
+
+import requests
+import os
+
+HOST = "localhost" if not os.environ.get("NODE_SERVER_HOST") else os.environ["NODE_SERVER_HOST"]
+PORT = 5000 if not os.environ.get("NODE_SERVER_PORT") else int(os.environ["NODE_SERVER_PORT"])
+
+SERVER_HOST = "localhost" if not os.environ.get("PYTHON_SERVER_HOST") else os.environ["PYTHON_SERVER_HOST"]
+SERVER_PORT = 3000 if not os.environ.get("PYTHON_SERVER_PORT") else int(os.environ["PYTHON_SERVER_PORT"])
 
 # Used for sign up. Returns true if username exits, false otherwise
 def is_username_unique(username):
 
-  url = 'http://localhost:5000/is_username_unique' 
+  url = f"http://{HOST}:{PORT}/is_username_unique"
   params = {"username": username}
   try: 
     response = requests.get(url, params=params) 
@@ -34,7 +43,7 @@ def create_user(username, password):
 
   # calling server to insert the user into the database
   data = {"username": username, "password": password}
-  url = 'http://localhost:5000/create_user' 
+  url = f"http://{HOST}:{PORT}/create_user"
 
   response = requests.post(url, json=data) 
 
@@ -45,7 +54,7 @@ def create_user(username, password):
 
 def login(username, password): 
     
-  url = 'http://localhost:5000/login'
+  url = f"http://{HOST}:{PORT}/login"
   data = {'username': username, 'password': password}
   response = requests.post(url, json=data)
 
@@ -64,7 +73,7 @@ def login(username, password):
     
 
 def is_title_unique(title): 
-  url = 'http://localhost:5000/is_title_unique' 
+  url = f"http://{HOST}:{PORT}/is_title_unique"
   params = {'title': title}
 
   response = requests.get(url, params=params)
@@ -83,9 +92,7 @@ def create_post(poster, title, postText, hashtags):
   # - timestamp (datetime): time when post was created
   # - hashtags (list): list of hashtags associated with the post
 
-  
-
-  url = 'http://localhost:5000/create_post' 
+  url = f"http://{HOST}:{PORT}/create_post"
   data = {"title": title, "poster": poster, "text": postText, "hashtags": hashtags}
   
   response = requests.post(url, json=data) 
@@ -98,7 +105,7 @@ def create_post(poster, title, postText, hashtags):
 # Fetch 10 newest posts
 def fetch_posts(): 
   # data = {"Title": "Title for post", "Poster": "username", "text":"Text for the post", "Timestamp":datetime.now(), "hashtags":["#hastag1", "#hastag2"], "Likes": 10, "Comments":["commenttext1"]}
-  url = 'http://localhost:5000/posts' 
+  url = f"http://{HOST}:{PORT}/posts"
   response = requests.get(url) 
   
   if response.status_code == 200:
@@ -110,7 +117,7 @@ def fetch_posts():
 
 # user may see only 50 newest posts
 def fetch_own_posts(username):
-  url = 'http://localhost:5000/ownPosts' 
+  url = f"http://{HOST}:{PORT}/ownPosts"
   data = {'username': username}
   response = requests.post(url, json=data) 
   
@@ -123,7 +130,7 @@ def fetch_own_posts(username):
     return None
 
 def find_hashtag(hashtag): 
-  url = 'http://localhost:5000/posts_hashtag' 
+  url = f"http://{HOST}:{PORT}/posts_hashtag"
   params = {"hashtag": hashtag}
   response = requests.get(url, params=params) 
   
@@ -135,7 +142,7 @@ def find_hashtag(hashtag):
     return None
 
 def like_post(post_name, username): 
-  url = 'http://localhost:5000/like'
+  url = f"http://{HOST}:{PORT}/like"
   data = {'title': post_name, 'username': username}
   response = requests.post(url, json=data)
 
@@ -149,7 +156,7 @@ def like_post(post_name, username):
     return "Error"
   
 def comment_post(post_name, username, comment):
-  url = 'http://localhost:5000/comment'
+  url = f"http://{HOST}:{PORT}/comment"
   data = {'title': post_name, 'username': username, 'comment': comment}
   response = requests.post(url, json=data)
 
@@ -161,7 +168,7 @@ def comment_post(post_name, username, comment):
     return "Error"
   
 def delete_post(post_name, username):
-  url = "http://localhost:5000/delete"
+  url = "http://{HOST}:{PORT}/delete"
   data = {'title': post_name, 'username': username}
   response = requests.delete(url, json=data)
 
@@ -172,11 +179,14 @@ def delete_post(post_name, username):
   else: 
     return "Error"
 
-if __name__ == "__main__":
-  PORT = 3000
-  with SimpleXMLRPCServer(('localhost', PORT), allow_none=True) as server:
-    server.register_introspection_functions()
+# https://stackoverflow.com/questions/1589150/python-xmlrpc-with-concurrent-requests
+class SimpleThreadedXMLRPCServer(ThreadingMixIn, SimpleXMLRPCServer):
+    pass
 
+def run_server() -> None:
+    server = SimpleThreadedXMLRPCServer((SERVER_HOST, SERVER_PORT), allow_none=True)
+
+    server.register_introspection_functions()
     server.register_function(is_username_unique)
     server.register_function(create_user)
     server.register_function(fetch_posts)
@@ -186,13 +196,14 @@ if __name__ == "__main__":
     server.register_function(is_title_unique)
     server.register_function(find_hashtag)
     server.register_function(comment_post)
-    server.register_function(delete_post)
-    server.register_function(fetch_own_posts)
 
-    print(f"Server running on port: {PORT}")
     print("Control-c to quit")
 
+    server.serve_forever()
+
+if __name__ == "__main__":
     try:
-      server.serve_forever()
+        run_server()
     except KeyboardInterrupt:
-      exit(0)
+        exit(0)
+
