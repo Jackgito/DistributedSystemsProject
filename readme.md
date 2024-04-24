@@ -26,7 +26,7 @@ This project implements a simplified Twitter clone application built with Python
 
 1. **Server:**
     * Ensure you have MongoDB running locally (port 27017 by default).
-    * Open a terminal in the project directory and run: `python server.py`
+    * Open a terminal in the project directory and run: `npm install` and `python server.py`
 2. **Client:**
     * Open a separate terminal in the project directory and run: `python client.py`
 
