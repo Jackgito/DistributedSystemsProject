@@ -1,28 +1,40 @@
-Twitter Clone - A Simple Python Project
+Here's the README file for your program:
 
-This project is a basic Twitter clone written in Python. It allows users to sign up, login, and interact with a few core functionalities (planned features are listed below).
+**Twitter Clone in Python**
 
-Current Features:
+This project implements a simplified Twitter clone application built with Python. It utilizes MongoDB as the database and XML-RPC for communication between the server and client.
 
-User Signup and Login
-Show Authentication Menu (placeholder for future functionalities)
-Main Menu with options (functionalities not yet implemented):
-Show Latest Posts (placeholder)
-Create a Post (placeholder)
-Search Tweets by Hashtag (placeholder)
-Send Direct Message (placeholder)
-Sign Out
-Planned Features:
+**Features:**
 
-Implement functionalities for showing latest posts, creating posts, searching by hashtag, sending direct messages.
-Consider user authentication and data persistence (saving user data and posts).
-Add error handling and user input validation.
-Running the Project:
+* User Management:
+    * Users can sign up with a username and password. Duplicate usernames are not allowed.
+    * Users can log in with their credentials.
+* Posting:
+    * Users can create and publish tweets containing text, hashtags, and a timestamp.
+* Feed:
+    * Users can view the 10 most recent tweets.
+* Interactions:
+    * Users can like and comment on existing tweets.
+* Search:
+    * Users can search for tweets based on hashtags.
 
-Make sure you have Python 3 installed on your system.
-Download or clone the project files.
-Open a terminal or command prompt and navigate to the project directory.
-Run the script using python main.py.
-Dependencies:
+**Technology Stack:**
 
-This project doesn't currently have any external dependencies.
+* Programming Language: Python
+* Database: MongoDB
+* Communication Protocol: XML-RPC
+
+**Running the Application:**
+
+1. **Server:**
+    * Ensure you have MongoDB running locally (port 27017 by default).
+    * Open a terminal in the project directory and run: `python server.py`
+2. **Client:**
+    * Open a separate terminal in the project directory and run: `python client.py`
+
+**Code Structure:**
+
+The codebase is divided into two main parts:
+
+* **server.py:** This file handles the server-side logic, including user management, post creation/storage, and interaction functionalities. It utilizes libraries like `pymongo` and `xmlrpc.server` for database interaction and remote procedure calls (RPC).
+* **client.py:** This file implements the client-side interface. It uses the `xmlrpc.client` library to communicate with the server and displays menus for various user actions like viewing posts, creating posts, searching, and signing out. Additionally, separate modules handle functionalities like authentication, post creation, and search.

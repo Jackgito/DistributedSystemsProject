@@ -32,13 +32,12 @@ def show_main_menu():
         create_post.create_post(CLIENT)
         
       elif choice == '3':
-        clear_screen()
+        #clear_screen()
         search_tweets_by_hashtag.search_tweets_by_hashtag(CLIENT)
 
       elif choice == '4':
-        clear_screen()
+        #clear_screen()
         globals.current_user = None
-        # sign_out()
         return
       
       else:
