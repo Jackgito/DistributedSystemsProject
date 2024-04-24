@@ -1,5 +1,3 @@
-Here's the README file for your program:
-
 **Twitter Clone in Python**
 
 This project implements a simplified Twitter clone application built with Python. It utilizes MongoDB as the database and XML-RPC for communication between the server and client.
