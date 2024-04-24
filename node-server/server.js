@@ -121,6 +121,23 @@ app.get('/posts', async (req, res) => {
   }
 }) 
 
+// route for getting users' own posts from database
+app.post('/ownPosts', async (req, res) => {
+  try {
+    const username = req.body.username; 
+    const user = await USER.findOne({ Username: username }) 
+    if (!user) {
+      return res.status(404).send({ message: "User not found" }) 
+    }
+
+    const posts = await POST.find({Poster: username}).sort({ Timestamp: -1}).limit(50) 
+    res.status(200).json(posts) 
+
+  } catch (error) {
+    res.status(500).send({ message: "Server error", error: error.toString() }) 
+  }
+}) 
+
 // route for getting posts with specific hashtag
 app.get('/posts_hashtag', async (req, res) => {
   try {
@@ -165,7 +182,6 @@ app.post('/like', async (req, res) => {
       res.status(201).send({message: "Like added"})
     }
     
-    
   } catch (error) {
     res.status(500).send({ message: "Server error", error: error.toString() }) 
   }
@@ -195,6 +211,30 @@ app.post('/comment', async (req, res) => {
   }
 })
 
+// route for deleting a post
+app.delete("/delete", async (req, res) => {
+  try{
+    const post_name = req.body.title;
+    const username = req.body.username;
+
+    // Checking to find the post to be deleted & its currently logged in users'
+    let post = await POST.findOne({ Title: post_name, Poster: username });
+    if (!post) {
+      return res.status(404).send({ message: "Post not found" });
+    }
+
+    // making sure that user can delete only their own posts
+    if (post.Poster !== username) {
+      return res.status(403).send({ message: "You are not authorized to delete this post" });
+    }
+
+    await POST.deleteOne({ Title: post_name, Poster: username });
+    res.status(201).send({ message: "Post deleted" });
+
+  } catch {
+    res.status(500).send({ message: "Server error", error: error.toString() }) 
+  }
+})
 
 const PORT = 5000 
 app.listen(PORT, () => {

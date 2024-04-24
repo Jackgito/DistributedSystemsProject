@@ -2,7 +2,6 @@ import requests # pip3 install requests
 from xmlrpc.server import SimpleXMLRPCServer
 from datetime import datetime, timedelta
 
-
 # Used for sign up. Returns true if username exits, false otherwise
 def is_username_unique(username):
 
@@ -14,7 +13,7 @@ def is_username_unique(username):
 
     return data['isUnique']
   except requests.exceptions as e:
-     print(f"Request failed: {e}")
+    print(f"Request failed: {e}")
   return None
 
 def go_through_posts(cursor):
@@ -24,9 +23,11 @@ def go_through_posts(cursor):
   for i in result_array:
     i['_id'] = str(i['_id']) # id and datetime needs to be converted to strings.
     i['Timestamp'] = str(i['Timestamp'])
+
     iso_date = datetime.fromisoformat(i['Timestamp'])+ timedelta(hours=3) # Formatting the date to wanted form +3 hours to match Helsinki timezone
     formatted_date = iso_date.strftime("%d/%m/%Y %H:%M")
     i['Timestamp'] = formatted_date 
+
   return result_array
 
 def create_user(username, password): 
@@ -42,25 +43,24 @@ def create_user(username, password):
   else:
     return False
 
-
 def login(username, password): 
     
-    url = 'http://localhost:5000/login'
-    data = {'username': username, 'password': password}
-    response = requests.post(url, json=data)
+  url = 'http://localhost:5000/login'
+  data = {'username': username, 'password': password}
+  response = requests.post(url, json=data)
 
-    if response.status_code == 200:
-        print("Login successful")
-        return True
-    elif response.status_code == 404:
-        print("User not found")
-        return False
-    elif response.status_code == 401:
-        print("Invalid credentials")
-        return False
-    else:
-        print("Failed to authenticate")
-        return False
+  if response.status_code == 200:
+    print("Login successful")
+    return True
+  elif response.status_code == 404:
+    print("User not found")
+    return False
+  elif response.status_code == 401:
+    print("Invalid credentials")
+    return False
+  else:
+    print("Failed to authenticate")
+    return False
     
 
 def is_title_unique(title): 
@@ -72,15 +72,19 @@ def is_title_unique(title):
 
   return data['isUnique']
 
+
 def create_post(poster, title, postText, hashtags): 
   
+
   # Creates new post and adds it to database. Parameters:
   # - poster (str): the user who created the post
   # - title (str): title of the post
   # - postText (str): post content
   # - timestamp (datetime): time when post was created
   # - hashtags (list): list of hashtags associated with the post
+
   
+
   url = 'http://localhost:5000/create_post' 
   data = {"title": title, "poster": poster, "text": postText, "hashtags": hashtags}
   
@@ -98,11 +102,25 @@ def fetch_posts():
   response = requests.get(url) 
   
   if response.status_code == 200:
-        posts = response.json() 
-        return go_through_posts(posts)
+    posts = response.json() 
+    return go_through_posts(posts)
   else:
-      print("Error occurred when retrieving posts:", response.status_code)
-      return None
+    print("Error occurred when retrieving posts:", response.status_code)
+    return None
+
+# user may see only 50 newest posts
+def fetch_own_posts(username):
+  url = 'http://localhost:5000/ownPosts' 
+  data = {'username': username}
+  response = requests.post(url, json=data) 
+  
+  if response.status_code == 200:
+    posts = response.json() 
+    return go_through_posts(posts)
+
+  else:
+    print("Error occurred when retrieving own posts:", response.status_code)
+    return None
 
 def find_hashtag(hashtag): 
   url = 'http://localhost:5000/posts_hashtag' 
@@ -110,11 +128,11 @@ def find_hashtag(hashtag):
   response = requests.get(url, params=params) 
   
   if response.status_code == 200:
-        posts = response.json() 
-        return go_through_posts(posts)
+    posts = response.json() 
+    return go_through_posts(posts)
   else:
-      print("Error occurred when retrieving posts with hashtag:", response.status_code)
-      return None
+    print("Error occurred when retrieving posts with hashtag:", response.status_code)
+    return None
 
 def like_post(post_name, username): 
   url = 'http://localhost:5000/like'
@@ -122,47 +140,59 @@ def like_post(post_name, username):
   response = requests.post(url, json=data)
 
   if response.status_code == 201:
-      return "LikeAdded"
+    return "LikeAdded"
   elif response.status_code == 404:
-      return "PostNotFound"
+    return "PostNotFound"
   elif response.status_code == 204:
-      return "LikeRemoved"
+    return "LikeRemoved"
   else:
-      return "Error"
+    return "Error"
   
-
 def comment_post(post_name, username, comment):
   url = 'http://localhost:5000/comment'
   data = {'title': post_name, 'username': username, 'comment': comment}
   response = requests.post(url, json=data)
 
   if response.status_code == 201:
-      return "CommentAdded"
+    return "CommentAdded"
   elif response.status_code == 404:
-      return "PostNotFound"
+    return "PostNotFound"
   else:
-      return "Error"
+    return "Error"
   
+def delete_post(post_name, username):
+  url = "http://localhost:5000/delete"
+  data = {'title': post_name, 'username': username}
+  response = requests.delete(url, json=data)
 
+  if response.status_code == 201:
+    return "PostDeleted"
+  elif response.status_code == 404:
+    return "PostNotFound"
+  else: 
+    return "Error"
 
 if __name__ == "__main__":
-    with SimpleXMLRPCServer(('localhost', 3000), allow_none=True) as server:
-        server.register_introspection_functions()
+  PORT = 3000
+  with SimpleXMLRPCServer(('localhost', PORT), allow_none=True) as server:
+    server.register_introspection_functions()
 
-        server.register_function(is_username_unique)
-        server.register_function(create_user)
-        server.register_function(fetch_posts)
-        server.register_function(login)
-        server.register_function(create_post)
-        server.register_function(like_post)
-        server.register_function(is_title_unique)
-        server.register_function(find_hashtag)
-        server.register_function(comment_post)
+    server.register_function(is_username_unique)
+    server.register_function(create_user)
+    server.register_function(fetch_posts)
+    server.register_function(login)
+    server.register_function(create_post)
+    server.register_function(like_post)
+    server.register_function(is_title_unique)
+    server.register_function(find_hashtag)
+    server.register_function(comment_post)
+    server.register_function(delete_post)
+    server.register_function(fetch_own_posts)
 
-        print("Control-c to quit")
+    print(f"Server running on port: {PORT}")
+    print("Control-c to quit")
 
-        try:
-            server.serve_forever()
-        except KeyboardInterrupt:
-            exit(0)
-
+    try:
+      server.serve_forever()
+    except KeyboardInterrupt:
+      exit(0)
