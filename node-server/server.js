@@ -2,10 +2,14 @@ const express = require('express')
 const bcrypt = require('bcrypt')  
 const mongoose = require('mongoose')  
 
+const SERVER_PORT = process.env.SERVER_PORT ? process.env.SERVER_PORT : 5001
+const MONGO_PORT = process.env.MONGO_PORT ? process.env.MONGO_PORT : 27017
+const MONGO_HOST = process.env.MONGO_HOST ? process.env.MONGO_HOST : "localhost"
+
 const app = express() 
 app.use(express.json()) 
 
-mongoose.connect('mongodb://127.0.0.1:27017/DSproject') 
+mongoose.connect(`mongodb://${MONGO_HOST}:${MONGO_PORT}/DSproject`)
 
 // model for users
 const USER = mongoose.model('user', new mongoose.Schema({
@@ -236,7 +240,6 @@ app.delete("/delete", async (req, res) => {
   }
 })
 
-const PORT = 5000 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`) 
+app.listen(SERVER_PORT, () => {
+  console.log(`Server running on port ${SERVER_PORT}`)
 }) 
