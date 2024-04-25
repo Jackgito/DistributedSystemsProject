@@ -2,7 +2,7 @@ const express = require('express')
 const bcrypt = require('bcrypt')  
 const mongoose = require('mongoose')  
 
-const SERVER_PORT = process.env.SERVER_PORT ? process.env.SERVER_PORT : 5001
+const SERVER_PORT = process.env.SERVER_PORT ? process.env.SERVER_PORT : 5000
 const MONGO_PORT = process.env.MONGO_PORT ? process.env.MONGO_PORT : 27017
 const MONGO_HOST = process.env.MONGO_HOST ? process.env.MONGO_HOST : "localhost"
 

@@ -71,6 +71,19 @@ $ npm install
 $ node server.js
 ```
 
+By default node-server requires mongodb to be run `localhost:27017` and will
+by default expose itself on port `5000`. These can be configured with env
+variables:
+
+```
+$ export SERVER_PORT=<node-server-port> # Default is 5000
+
+$ export MONGO_HOST=<mongo-host> # Default is "localhost"
+$ export MONGO_PORT=<mongo-port> # Default is 27017
+
+$ node server.js
+```
+
 ##### MongoDB server
 
 Make sure you have the mongodb server runnign on port `27017`, if you
@@ -91,6 +104,23 @@ $ python3 -m venv server-env
 $ ./server-env/bin/pip3 install -r server/requirements.txt
 $ ./server-env/bin/python3 server/server.py
 ```
+
+Python server will by default be run on `localhost:3000` and will require
+by default node-server to be run on `localhost:5000`. These can be configured
+with env variables:
+
+```
+$ export NODE_SERVER_HOST=<node-server-host> # Default is "localhost"
+$ export NODE_SERVER_PORT=<node-server-port> # Default is 5000
+
+$ export PYTHON_SERVER_HOST=<python-server-host> # Default is "localhost"
+$ export PYTHON_SERVER_PORT=<python-server-port> # Default is 3000
+
+$ ./server-env/bin/python3 server/server.py
+```
+
+The env variables have different values when deploying with docker compose,
+the values can be found from the `docker-compose.yml` file on repo root.
 
 ## Code Structure
 
