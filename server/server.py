@@ -168,7 +168,7 @@ def comment_post(post_name, username, comment):
     return "Error"
   
 def delete_post(post_name, username):
-  url = "http://{HOST}:{PORT}/delete"
+  url = f"http://{HOST}:{PORT}/delete"
   data = {'title': post_name, 'username': username}
   response = requests.delete(url, json=data)
 
@@ -196,6 +196,8 @@ def run_server() -> None:
     server.register_function(is_title_unique)
     server.register_function(find_hashtag)
     server.register_function(comment_post)
+    server.register_function(fetch_own_posts)
+    server.register_function(delete_post)
 
     print("Control-c to quit")
 
